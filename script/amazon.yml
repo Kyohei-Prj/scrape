@@ -1,0 +1,5 @@
+url: 'https://www.amazon.co.jp'
+id: 'twotabsearchtextbox'
+button: 'nav-input'
+keyword: ['キーボード', '炊飯器']
+sleep: 20

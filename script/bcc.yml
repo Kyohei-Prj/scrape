@@ -1,0 +1,5 @@
+url: 'https://www.biccamera.com/bc/main/'
+id: 'q'
+button: 'bcs_searchBtn'
+keyword: ['キーボード', '炊飯器']
+sleep: 20
