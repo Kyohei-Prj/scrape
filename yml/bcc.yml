@@ -1,5 +1,13 @@
+# url scraper
 url: 'https://www.biccamera.com/bc/main/'
 id: 'q'
 button: 'bcs_searchBtn'
 keyword: ['キーボード', '炊飯器']
+url_list: '../data/url_list/bcc_product_url.csv'
 sleep: 20
+
+# product scraper
+tag: 'a'
+class_: 'bcs_item'
+css: '.bcs_item'
+product: '../data/product/bcc_product_list.csv'

@@ -1,5 +1,13 @@
+# url scraper
 url: 'https://www.amazon.co.jp'
 id: 'twotabsearchtextbox'
 button: 'nav-input'
 keyword: ['キーボード', '炊飯器']
+url_list: '../data/url_list/amazon_product_url.csv'
 sleep: 20
+
+# product scraper
+tag: 'h2'
+class_: 'a-size-mini'
+css: 'h2>a'
+product: '../data/product/amazon_product_list.csv'
