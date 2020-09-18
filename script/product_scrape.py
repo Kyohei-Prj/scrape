@@ -1,19 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from bs4 import BeautifulSoup
+from web_scraper import load_yaml
 import pandas as pd
 import requests
 import sys
-import yaml
 import time
-
-
-def load_yaml(filename):
-
-    with open(filename, encoding='utf_8_sig') as file:
-        config = yaml.load(file, Loader=yaml.SafeLoader)
-
-    return config
 
 
 def load_scraper(url):
@@ -58,17 +50,14 @@ def main():
 
     soup = soup_list[0]
 
-    #print(soup.select_one(config['css']).text)
-    #print(soup.select_one(config['css']).get('href'))
-
-    #print(soup.select(config['css']))
-
     product_name = [tag.text for tag in soup.select(config['css'])]
     product_url = [tag.get('href') for tag in soup.select(config['css'])]
 
     df_url = pd.DataFrame(list(zip(product_name, product_url)),
                           columns=['product_name', 'product_url'])
     df_url.to_csv(config['product'], index=False)
+
+    print('end product_scrape.py main')
 
 
 if __name__ == '__main__':

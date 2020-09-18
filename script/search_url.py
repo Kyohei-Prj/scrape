@@ -1,18 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from selenium import webdriver
+from web_scraper import load_yaml
 import pandas as pd
 import sys
-import yaml
 import time
-
-
-def load_yaml(filename):
-
-    with open(filename, encoding='utf_8_sig') as file:
-        config = yaml.load(file, Loader=yaml.SafeLoader)
-
-    return config
 
 
 def load_search_page(url):
@@ -40,10 +32,10 @@ def input_2_search_box(driver, id, button, keyword, sleep):
     return driver.current_url
 
 
-def main():
+def search_keywords(store, product_page):
 
     # load settings
-    config = load_yaml(sys.argv[1])
+    config = load_yaml(store)
 
     # load main url page
     driver = load_search_page(config['url'])
@@ -61,6 +53,14 @@ def main():
     df_url = pd.DataFrame(list(zip(config['keyword'], url_list)),
                           columns=['keyword', 'url'])
     df_url.to_csv(config['url_list'], index=False)
+
+
+def main():
+
+    # load settings
+    config = load_yaml(sys.argv[1])
+
+    search_keywords(config['stores'][0], config['product_page'])
 
 
 if __name__ == '__main__':
