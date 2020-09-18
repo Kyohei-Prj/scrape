@@ -1,4 +1,4 @@
-from bow import bow_colletcor
+from script.bow import bow_colletcor
 
 import threading
 import yaml
