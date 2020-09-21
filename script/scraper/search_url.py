@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from selenium import webdriver
-from web_scraper import load_yaml
+from .yaml_loader import load_yaml
 import pandas as pd
 import sys
 import time
@@ -32,27 +32,28 @@ def input_2_search_box(driver, id, button, keyword, sleep):
     return driver.current_url
 
 
-def search_keywords(store, product_page):
+def search_keywords(store, config):
 
     # load settings
-    config = load_yaml(store)
+    store_name = load_yaml(store)
 
     # load main url page
-    driver = load_search_page(config['url'])
+    driver = load_search_page(store_name['url'])
 
     # input argument to search box and get list of urls
     url_list = [
-        input_2_search_box(driver, config['id'], config['button'], keyword,
-                           config['sleep']) for keyword in config['keyword']
+        input_2_search_box(driver, store_name['id'], store_name['button'],
+                           keyword, config['sleep'])
+        for keyword in config['keywords']
     ]
 
     # close driver session
     driver.close
     driver.quit
 
-    df_url = pd.DataFrame(list(zip(config['keyword'], url_list)),
+    df_url = pd.DataFrame(list(zip(config['keywords'], url_list)),
                           columns=['keyword', 'url'])
-    df_url.to_csv(config['url_list'], index=False)
+    df_url.to_csv(store_name['url_list'], index=False)
 
 
 def main():
