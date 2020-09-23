@@ -4,10 +4,12 @@ id: 'q'
 button: 'bcs_searchBtn'
 keyword: ['キーボード', '炊飯器']
 url_list: '../data/url_list/bcc_product_url.csv'
+page: '&p='
 sleep: 20
 
 # product scraper
 tag: 'a'
 class_: 'bcs_item'
 css: '.bcs_item'
-product: '../data/product/bcc_product_list.csv'
+save_path: '../data/product/'
+product: 'bcc_product_list.csv'

@@ -15,21 +15,26 @@ def load_search_page(url):
     return driver
 
 
-def input_2_search_box(driver, id, button, keyword, sleep):
+def input_2_search_box(driver, store_name, keyword, config):
 
     # search by keyword
-    search_box = driver.find_element_by_id(id)
+    search_box = driver.find_element_by_id(store_name['id'])
     search_box.send_keys(keyword)
-    click_box = driver.find_element_by_class_name(button)
+    click_box = driver.find_element_by_class_name(store_name['button'])
     click_box.click()
 
-    time.sleep(sleep)
+    time.sleep(config['sleep'])
 
     # clear text in search box
-    search_box = driver.find_element_by_id(id)
+    search_box = driver.find_element_by_id(store_name['id'])
     search_box.clear()
 
-    return driver.current_url
+    url_list = [driver.current_url]
+    for page in range(2, config['product_page'] + 1):
+        url_list.append(
+            driver.current_url.split('&')[0] + store_name['page'] + str(page))
+
+    return url_list
 
 
 def search_keywords(store, config):
@@ -42,8 +47,7 @@ def search_keywords(store, config):
 
     # input argument to search box and get list of urls
     url_list = [
-        input_2_search_box(driver, store_name['id'], store_name['button'],
-                           keyword, config['sleep'])
+        input_2_search_box(driver, store_name, keyword, config)
         for keyword in config['keywords']
     ]
 
@@ -51,9 +55,14 @@ def search_keywords(store, config):
     driver.close
     driver.quit
 
-    df_url = pd.DataFrame(list(zip(config['keywords'], url_list)),
-                          columns=['keyword', 'url'])
-    df_url.to_csv(store_name['url_list'], index=False)
+    columns = ['url_1']
+    for i in range(2, len(url_list[0]) + 1):
+        columns.append('url_' + str(i))
+
+    df_url = pd.DataFrame(url_list, index=config['keywords'], columns=columns)
+    df_url.index.name = 'keywords'
+
+    df_url.to_csv(store_name['url_list'])
 
 
 def main():
@@ -61,7 +70,7 @@ def main():
     # load settings
     config = load_yaml(sys.argv[1])
 
-    search_keywords(config['stores'][0], config['product_page'])
+    search_keywords(config['stores'][0], config)
 
 
 if __name__ == '__main__':

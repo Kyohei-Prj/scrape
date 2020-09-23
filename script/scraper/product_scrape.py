@@ -17,27 +17,36 @@ def load_scraper(url):
     return soup
 
 
-def get_product_name():
+def product_info(store):
 
-    pass
+    # load settings
+    config = load_yaml(store)
+
+    # load keyword page url
+    df_url = pd.read_csv(config['url_list'], index_col='keywords')
+
+    for keyword in df_url.index:
+        print('product_info keyword: ', keyword)
+        product_name = []
+        product_url = []
+        for url in df_url.loc[keyword]:
+            print(url)
+            soup = load_scraper(url)
+            product_name.append(
+                [tag.text for tag in soup.select(config['css'])])
+            product_url.append(
+                [tag.get('href') for tag in soup.select(config['css'])])
+            df_product_info = pd.DataFrame(
+                list(zip(product_name, product_url)),
+                columns=['product_name', 'product_url'])
+            df_product_info.to_csv(config['save_path'] + keyword + '_' +
+                                   config['product'],
+                                   index=False,
+                                   mode='a')
+            time.sleep(20)
 
 
-def get_product_url():
-
-    pass
-
-
-def get_product_description():
-
-    pass
-
-
-def get_product_reviews():
-
-    pass
-
-
-def main():
+def backup():
 
     # load settings
     config = load_yaml(sys.argv[1])
@@ -58,6 +67,18 @@ def main():
     df_url.to_csv(config['product'], index=False)
 
     print('end product_scrape.py main')
+
+
+def main():
+
+    # load settings
+    config = load_yaml(sys.argv[1])
+
+    # load keyword page url
+    df_url = pd.read_csv(config['url_list'])
+
+    for keyword in df_url.index:
+        print(keyword)
 
 
 if __name__ == '__main__':
