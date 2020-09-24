@@ -6,6 +6,7 @@ import pandas as pd
 import requests
 import sys
 import time
+import os
 
 
 def load_scraper(url):
@@ -26,24 +27,28 @@ def product_info(store):
     df_url = pd.read_csv(config['url_list'], index_col='keywords')
 
     for keyword in df_url.index:
+        save_path = config['save_path'] + keyword + '_' + config['product']
         print('product_info keyword: ', keyword)
         product_name = []
         product_url = []
         for url in df_url.loc[keyword]:
-            print(url)
+            print('url: ', url)
             soup = load_scraper(url)
             product_name.append(
                 [tag.text for tag in soup.select(config['css'])])
             product_url.append(
                 [tag.get('href') for tag in soup.select(config['css'])])
-            df_product_info = pd.DataFrame(
-                list(zip(product_name, product_url)),
-                columns=['product_name', 'product_url'])
-            df_product_info.to_csv(config['save_path'] + keyword + '_' +
-                                   config['product'],
-                                   index=False,
-                                   mode='a')
-            time.sleep(20)
+            time.sleep(15)
+        columns = []
+        for i in range(len(product_name)):
+            columns.append('url_' + str(i))
+        df_product_info = pd.DataFrame(product_name)
+        df_product_info = df_product_info.stack()
+        if (os.path.exists(save_path)):
+            df_product_info.to_csv(save_path, index=False, header=False, mode='a')
+        else:
+            df_product_info.to_csv(save_path, index=False)
+
 
 
 def backup():
