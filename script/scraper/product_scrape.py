@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from bs4 import BeautifulSoup
 from .yaml_loader import load_yaml
 import pandas as pd
@@ -45,10 +43,15 @@ def product_info(store):
         df_product_info = pd.DataFrame(product_name)
         df_product_info = df_product_info.stack()
         if (os.path.exists(save_path)):
-            df_product_info.to_csv(save_path, index=False, header=False, mode='a')
+            df_product_info.to_csv(save_path,
+                                   index=False,
+                                   header=False,
+                                   mode='a',
+                                   encoding=config['encoding'])
         else:
-            df_product_info.to_csv(save_path, index=False)
-
+            df_product_info.to_csv(save_path,
+                                   index=False,
+                                   encoding=config['encoding'])
 
 
 def backup():
