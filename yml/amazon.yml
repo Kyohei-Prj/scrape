@@ -14,3 +14,6 @@ css: 'h2>a'
 save_path: '../data/product/'
 product: 'amazon_product_list.csv'
 encoding: 'utf-8-sig'
+url_head: 'https://www.amazon.co.jp'
+
+css_review: '.review-data'

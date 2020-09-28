@@ -16,6 +16,31 @@ def load_scraper(url):
     return soup
 
 
+def get_tag(url_list, css):
+
+    tag_list = []
+    for url in url_list:
+        soup = load_scraper(url)
+        tag_list.append(tag for tag in soup.select(css))
+        time.sleep(15)
+
+    return tag_list
+
+
+def get_tag_text(tag_list):
+
+    tag_text_list = [tag.text for tag in tag_list]
+
+    return tag_text_list
+
+
+def get_tag_url(tag_list, config):
+
+    tag_url_list = [config['url_head'] + tag.get('href').replace('dp', 'review') for tag in tag_list]
+
+    return tag_url_list
+
+
 def product_info(store):
 
     # load settings
@@ -27,31 +52,66 @@ def product_info(store):
     for keyword in df_url.index:
         save_path = config['save_path'] + keyword + '_' + config['product']
         print('product_info keyword: ', keyword)
+        '''
         product_name = []
         product_url = []
+        '''
+        tag_list = get_tag(df_url.loc[keyword], config['css'])
+        product_name = get_tag_text(tag_list)
+        product_url = get_tag_url(tag_list, config)
+        '''
         for url in df_url.loc[keyword]:
             print('url: ', url)
             soup = load_scraper(url)
             product_name.append(
                 [tag.text for tag in soup.select(config['css'])])
-            product_url.append(
-                [tag.get('href') for tag in soup.select(config['css'])])
+            product_url.append([
+                (config['url_head'] + tag.get('href')).replace('dp', 'review')
+                for tag in soup.select(config['css'])
+            ])
             time.sleep(15)
+        '''
         columns = []
         for i in range(len(product_name)):
             columns.append('url_' + str(i))
-        df_product_info = pd.DataFrame(product_name)
-        df_product_info = df_product_info.stack()
+
+        df_product_name = pd.DataFrame(product_name)
+        df_product_name = df_product_name.stack()
+
+        df_product_url = pd.DataFrame(product_url)
+        df_product_url = df_product_url.stack()
+
+        review_tag = get_tag(df_product_url, config['css_review'])
+        review_list = get_tag_text(review_tag)
+
+        '''
+        review_list = []
+        for url in df_product_url:
+            print('product url: ', url)
+            soup = load_scraper(url)
+            review_list.append(
+                [tag.text for tag in soup.select(config['css_review'])])
+            time.sleep(15)
+        '''
+
+        for review in review_list:
+            print(review)
+
+        df_product_review = pd.DataFrame(review_list)
+        df_product_review = df_product_review.stack()
+
         if (os.path.exists(save_path)):
-            df_product_info.to_csv(save_path,
-                                   index=False,
-                                   header=False,
-                                   mode='a',
-                                   encoding=config['encoding'])
+            df_product_review.to_csv(save_path,
+                                     index=False,
+                                     header=False,
+                                     mode='a',
+                                     encoding=config['encoding'],
+                                     errors='ignore')
         else:
-            df_product_info.to_csv(save_path,
-                                   index=False,
-                                   encoding=config['encoding'])
+            df_product_review.to_csv(save_path,
+                                     index=False,
+                                     encoding=config['encoding'],
+                                     errors='ignore')
 
 
 def backup():

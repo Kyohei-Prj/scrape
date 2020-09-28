@@ -1,7 +1,7 @@
 # url scraper
-url: 'https://www.biccamera.com/bc/main/'
-id: 'q'
-button: 'bcs_searchBtn'
+url: 'https://www.yodobashi.com/'
+id: 'srcBtn'
+button: 'js_keywordSearchBtn'
 keyword: ['キーボード', '炊飯器']
 url_list: '../data/url_list/bcc_product_url.csv'
 page: '&p='
