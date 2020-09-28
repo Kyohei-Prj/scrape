@@ -16,29 +16,26 @@ def load_scraper(url):
     return soup
 
 
-def get_tag(url_list, css):
+def get_tag(url_list, css, func, url_head=None):
 
     tag_list = []
     for url in url_list:
+        print('url: ', url)
         soup = load_scraper(url)
-        tag_list.append(tag for tag in soup.select(css))
+        tag_list.append(func(tag, url_head) for tag in soup.select(css))
         time.sleep(15)
 
     return tag_list
 
 
-def get_tag_text(tag_list):
+def get_tag_text(tag, url_head):
 
-    tag_text_list = [tag.text for tag in tag_list]
-
-    return tag_text_list
+    return tag.text
 
 
-def get_tag_url(tag_list, config):
+def get_tag_url(tag, url_head):
 
-    tag_url_list = [config['url_head'] + tag.get('href').replace('dp', 'review') for tag in tag_list]
-
-    return tag_url_list
+    return url_head + tag.get('href').replace('dp', 'review')
 
 
 def product_info(store):
@@ -56,9 +53,8 @@ def product_info(store):
         product_name = []
         product_url = []
         '''
-        tag_list = get_tag(df_url.loc[keyword], config['css'])
-        product_name = get_tag_text(tag_list)
-        product_url = get_tag_url(tag_list, config)
+        product_name = get_tag(df_url.loc[keyword], config['css'], get_tag_text)
+        product_url = get_tag(df_url.loc[keyword], config['css'], get_tag_url, config['url_head'])
         '''
         for url in df_url.loc[keyword]:
             print('url: ', url)
@@ -81,8 +77,7 @@ def product_info(store):
         df_product_url = pd.DataFrame(product_url)
         df_product_url = df_product_url.stack()
 
-        review_tag = get_tag(df_product_url, config['css_review'])
-        review_list = get_tag_text(review_tag)
+        review_list = get_tag(df_product_url, config['css_review'], get_tag_text)
 
         '''
         review_list = []
