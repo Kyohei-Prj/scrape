@@ -1,5 +1,5 @@
-keywords: ['keyboard']
+keywords: ['keyboard', 'mouse']
 stores: ['../yml/amazon.yml']
-product_page: 1
+product_page: 2
 review_page: 2
 sleep: 20

@@ -9,6 +9,8 @@ import time
 
 def load_search_page(url):
 
+    option = webdriver.ChromeOptions()
+    option.add_argument('headless')
     driver = webdriver.Chrome('../driver/chromedriver')
     driver.get(url)
 
@@ -22,14 +24,15 @@ def input_2_search_box(driver, store_name, keyword, config):
     search_box.send_keys(keyword)
     click_box = driver.find_element_by_class_name(store_name['button'])
     click_box.click()
+    url_list = [driver.current_url]
 
     time.sleep(config['sleep'])
+
 
     # clear text in search box
     search_box = driver.find_element_by_id(store_name['id'])
     search_box.clear()
 
-    url_list = [driver.current_url]
     for page in range(2, config['product_page'] + 1):
         url_list.append(
             driver.current_url.split('&')[0] + store_name['page'] + str(page))

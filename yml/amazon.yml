@@ -2,17 +2,15 @@
 url: 'https://www.amazon.co.jp'
 id: 'twotabsearchtextbox'
 button: 'nav-input'
-keyword: ['キーボード', '炊飯器']
 url_list: '../data/url_list/amazon_product_url.csv'
 page: '&page='
-sleep: 20
+sleep: 15
 
 # product scraper
-tag: 'h2'
-class_: 'a-size-mini'
-css: 'h2>a'
+css_product: 'h2>a'
 save_path: '../data/product/'
-product: 'amazon_product_list.csv'
+product_name: 'amazon_product_name.csv'
+product_review: 'amazon_product_reivew.csv'
 encoding: 'utf-8-sig'
 url_head: 'https://www.amazon.co.jp'
 

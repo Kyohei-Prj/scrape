@@ -8,7 +8,7 @@ import sys
 
 def bow_colletcor(store, config):
 
-    #search_keywords(store, config)
+    search_keywords(store, config)
     product_info(store)
 
 

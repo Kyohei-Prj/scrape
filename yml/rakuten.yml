@@ -1,0 +1,17 @@
+# url scraper
+url: 'https://search.rakuten.co.jp/search/mall/'
+id: 'ri-cmn-hdr-sitem'
+button: 'ri-cmn-hdr-search-btn'
+url_list: '../data/url_list/rakuten_product_url.csv'
+page: '?p='
+sleep: 15
+
+# product scraper
+css_product: 'h2>a'
+save_path: '../data/product/'
+product_name: 'rakuten_product_name.csv'
+product_review: 'rakuten_product_reivew.csv'
+encoding: 'utf-8-sig'
+url_head: ''
+
+css_review: '.review-data'

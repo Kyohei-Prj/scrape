@@ -1,0 +1,17 @@
+# url scraper
+url: 'https://www.rakuten.co.jp/'
+id: 'common-header-search-input'
+button: 'button--uGWy7'
+url_list: '../data/url_list/rakuten_product_url.csv'
+page: '?p='
+sleep: 15
+
+# product scraper
+css_product: 'h2>a'
+save_path: '../data/product/'
+product_name: 'rakuten_product_name.csv'
+product_review: 'rakuten_product_reivew.csv'
+encoding: 'utf-8-sig'
+url_head: 'https://www.rakuten.co.jp'
+
+css_review: '.review-data'
