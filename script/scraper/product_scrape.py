@@ -9,7 +9,10 @@ import os
 
 def load_scraper(url):
 
-    headers = {"User-Agent": "Mozilla/5.0"}
+    headers = {
+        'user-agent':
+        'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:50.0) Gecko/20100101 Firefox/50.0'
+    }
     html = requests.get(url, headers=headers).text
     soup = BeautifulSoup(html, features='lxml')
 
@@ -70,10 +73,8 @@ def product_info(store):
     for keyword in df_url.index:
         save_product_name = config['save_path'] + keyword + '_' + config[
             'product_name']
-        save_product_review = config['save_path'] + keyword + '_' + config[
-            'product_review']
-
         print('product_info keyword: ', keyword)
+
         product_name = get_tag(df_url.loc[keyword], config['css_product'],
                                get_tag_text)
         product_url = get_tag(df_url.loc[keyword], config['css_product'],
@@ -85,6 +86,8 @@ def product_info(store):
         save_to_csv(df_product_name, save_product_name, config['encoding'])
 
         '''
+        save_product_review = config['save_path'] + keyword + '_' + config[
+            'product_review']
         review_list = get_tag(df_product_url, config['css_review'],
                               get_tag_text)
         df_product_review = list_to_stack(review_list)
