@@ -85,14 +85,12 @@ def product_info(store):
 
         save_to_csv(df_product_name, save_product_name, config['encoding'])
 
-        '''
         save_product_review = config['save_path'] + keyword + '_' + config[
             'product_review']
         review_list = get_tag(df_product_url, config['css_review'],
                               get_tag_text)
         df_product_review = list_to_stack(review_list)
         save_to_csv(df_product_review, save_product_review, config['encoding'])
-        '''
 
 
 def backup():
