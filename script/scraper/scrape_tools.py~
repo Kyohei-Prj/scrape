@@ -1,0 +1,172 @@
+from selenium import webdriver
+from bs4 import BeautifulSoup
+import requests
+import pandas as pd
+import time
+import sys
+import os
+
+
+class ScrapeStore:
+    def __init__(self,
+                 name,
+                 main_url,
+                 keywords,
+                 button_id,
+                 button_press,
+                 sleep,
+                 product_css,
+                 flip_size,
+                 url_head,
+                 review_css=0):
+
+        self.name = name
+        self.main_url = main_url
+        self.keywords = keywords
+        self.button_id = button_id
+        self.button_press = button_press
+        self.sleep = sleep
+        self.product_css = product_css
+        self.flip_size = flip_size
+        self.url_head = url_head
+        self.review_css = review_css
+
+    def load_search_page(self):
+
+        option = webdriver.ChromeOptions()
+        option.add_argument('headless')
+        driver = webdriver.Chrome('../driver/chromedriver', options=option)
+        driver.get(self.main_url)
+
+        return driver
+
+
+    @staticmethod
+    def load_scraper(url):
+
+        headers = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:50.0) Gecko/20100101 Firefox/50.0'}
+        html = requests.get(url, headers=headers).text
+        soup = BeautifulSoup(html, features='lxml')
+
+        return soup
+
+    def get_tag(self, url_list, func):
+
+        tag_list = []
+
+        for url in url_list:
+            print('url: ', url)
+            soup = load_scraper(url)
+            tag_list.append(func(tag) for tag in soup.select(self.product_css))
+            time.sleep(self.sleep)
+            
+        return tag_list
+
+    
+
+    def get_tag_text(self, tag):
+
+        return tag.text
+
+
+
+    def get_tag_url(tag, url_head):
+
+        return url_head + tag.get('href').replace('dp', 'review')
+
+
+    
+    def get_product_info(self, url_dict):
+
+        for keyword in url_dict.keys():
+            print(self.name + ': ' + keyword)
+            product_name = get_tag(url_dict[keyword], get_tag_text)
+
+                
+
+
+        pass
+
+
+class PageStore(ScrapeStore):
+    def __init__(self, name, main_url, keywords, button_id, button_press,
+                 sleep, product_css, flip_size, review_css, flip_method):
+        ScrapeStore.__init__(self, name, main_url, keywords, button_id,
+                             button_press, sleep, product_css, flip_size,
+                             review_css)
+        self.flip_page = flip_method
+
+    def get_keyword_url(self, driver):
+
+        url_dict = {}
+        for keyword in self.keywords:
+            url_list = []
+            search_box = driver.find_element_by_id(self.button_id)
+            search_box.send_keys(keyword)
+            click_box = driver.find_element_by_class_name(self.button_press)
+            click_box.click()
+
+            url_list.append(driver.current_url)
+            time.sleep(self.sleep)
+
+            search_box = driver.find_element_by_id(self.button_id)
+            search_box.clear()
+
+            for page in range(2, self.flip_size + 1):
+                url_list.append(
+                    driver.current_url.split('&')[0] + self.flip_page +
+                    str(page))
+
+            url_dict[keyword] = url_list
+
+        return url_dict
+
+
+class ScrollStore(ScrapeStore):
+    def __init__(self, name, main_url, keywords, button_id, button_press,
+                 sleep, product_css, flip_size, review_css, flip_method):
+        ScrapeStore.__init__(self,
+                             name,
+                             main_url,
+                             keywords,
+                             button_id,
+                             button_press,
+                             sleep,
+                             product_css,
+                             flip_size,
+                             review_css=None)
+        self.scroll = flip_method
+
+    def get_keyword_url(self, driver):
+
+        url_list = []
+        for keyword in self.keywords:
+            search_box = driver.find_element_by_id(self.button_id)
+            search_box.send_keys(keyword)
+            click_box = driver.find_element_by_class_name(self.button_press)
+            click_box.click()
+
+            url_list.append(driver.current_url)
+            time.sleep(self.sleep)
+
+            search_box = driver.find_element_by_id(self.button_id)
+            search_box.clear()
+
+            for page in range(2, self.flip_size + 1):
+                url_list.append(
+                    driver.current_url.split('&')[0] + self.scroll + str(page))
+
+        return url_list
+
+
+def main():
+
+    store = PageStore('store_name', 'url', ['word_1', 'word_2'], 'buttion_id',
+                      'button_press', 15, 'product_css', 5, 'review_css')
+
+    print(store.main_url)
+    print(store.sleep)
+
+
+if __name__ == '__main__':
+    main()

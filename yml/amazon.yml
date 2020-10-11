@@ -1,17 +1,11 @@
-# url scraper
-url: 'https://www.amazon.co.jp'
-id: 'twotabsearchtextbox'
-button: 'nav-input'
-url_list: '../data/url_list/amazon_product_url.csv'
-page: '&page='
-sleep: 15
-
-# product scraper
-css_product: 'h2>a'
-save_path: '../data/product/'
-product_name: 'amazon_product_name.csv'
-product_review: 'amazon_product_reivew.csv'
-encoding: 'utf-8-sig'
+name: 'amazon'
+main_url: 'https://www.amazon.co.jp'
+keywords: ['keyboard']
+button_id: 'twotabsearchtextbox'
+button_press: 'nav-input'
+sleep: 20
+product_css: 'h2>a'
+review_css: '.review-data'
+flip_size: 2
+flip_method: '&page='
 url_head: 'https://www.amazon.co.jp'
-
-css_review: '.review-data'

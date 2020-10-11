@@ -1,5 +1,7 @@
 keywords: ['keyboard', 'mouse']
-stores: ['../yml/rakuten.yml']
-product_page: 2
+stores: ['../yml/amazon.yml', '../yml/rakuten.yml']
+product_page: 5
 review_page: 2
 sleep: 15
+paging: ['../yml/rakuten.yml', '../yml/amazon.yml']
+scroll: ['../yml/amazon.yml', '../yml/rakuten.yml']
