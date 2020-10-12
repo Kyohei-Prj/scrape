@@ -2,7 +2,6 @@ from scraper.yaml_loader import load_yaml
 from scraper.scrape_tools import PageStore
 
 import multiprocessing as mp
-import threading
 import sys
 import time
 
@@ -44,35 +43,11 @@ def get_store_list(stores_yaml, Store_Object):
     return store_list
 
 
-def make_thread_list(store_list):
-
-    thread_list = [
-        threading.Thread(target=collect_data, args=([store]))
-        for store in store_list
-    ]
-
-    return thread_list
-
-
 def start_scraping(stores_yaml, Store_Object):
 
     store_list = get_store_list(stores_yaml, Store_Object)
-    thread_list = make_thread_list(store_list)
 
-    for thread in thread_list:
-        thread.start()
-
-    for thread in thread_list:
-        thread.join()
-
-
-def start_multiprocess_scraping(stores_yaml, Store_Object):
-
-    store_list = get_store_list(stores_yaml, Store_Object)
-
-    cpu_num = mp.cpu_count()
-    print('cpu_num:', cpu_num)
-    pool = mp.Pool(processes=cpu_num)
+    pool = mp.Pool(processes=len(store_list))
     pool.map(collect_data, store_list)
 
 
@@ -80,10 +55,9 @@ def main():
 
     start = time.time()
     stores_yaml = load_yaml(sys.argv[1])
-    #start_scraping(stores_yaml['paging'], PageStore)
-    start_multiprocess_scraping(stores_yaml['paging'], PageStore)
+    start_scraping(stores_yaml['paging'], PageStore)
     stop = time.time()
-    print('elapsed time: ', stop - start)
+    print('elapsed time: ', round((stop - start), 2))
 
 
 if __name__ == '__main__':

@@ -1,6 +1,6 @@
 name: 'amazon'
 main_url: 'https://www.amazon.co.jp'
-keywords: ['keyboard']
+keywords: ['パンを焼く']
 button_id: 'twotabsearchtextbox'
 button_press: 'nav-input'
 sleep: 20

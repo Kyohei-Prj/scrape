@@ -1,6 +1,6 @@
 name: 'rakuten'
 main_url: 'https://search.rakuten.co.jp/search/mall/'
-keywords: ['computer', 'iphone']
+keywords: ['スマブラ', '羽なし扇風機']
 button_id: 'ri-cmn-hdr-sitem'
 button_press: 'ri-cmn-hdr-search-btn'
 sleep: 15

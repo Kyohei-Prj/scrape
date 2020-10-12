@@ -115,14 +115,20 @@ class ScrapeStore:
                         save_list.append(item)
             save_dict[key] = save_list
 
-        df = pd.DataFrame(save_dict)
+        df = pd.DataFrame.from_dict(save_dict, orient='index').T
         save_to = ScrapeStore.save_path + self.name + '_' + content + '.csv'
         if (os.path.exists(save_to)):
             df_arch = pd.read_csv(save_to)
             df_concat = pd.concat([df_arch, df], axis=1)
-            df_concat.to_csv(save_to, index=False, encoding='utf_8_sig', errors='ignore')
+            df_concat.to_csv(save_to,
+                             index=False,
+                             encoding='utf_8_sig',
+                             errors='ignore')
         else:
-            df.to_csv(save_to, index=False, encoding='utf_8_sig', errors='ignore')
+            df.to_csv(save_to,
+                      index=False,
+                      encoding='utf_8_sig',
+                      errors='ignore')
 
 
 class PageStore(ScrapeStore):
